@@ -113,10 +113,6 @@
 	</dependencies>
 
 	<build>
-		<!-- Set nonstandard source and test source dirs -->
-		<sourceDirectory>src</sourceDirectory>
-		<testSourceDirectory>test</testSourceDirectory>
-
 		<pluginManagement>
 			<plugins>
 				<plugin>
