@@ -1,15 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>com.esotericsoftware</groupId>
-		<artifactId>kryo-parent</artifactId>
-		<version>3.0.1</version>
+		<groupId>net.lizalab</groupId>
+		<artifactId>kryo-slf4j-parent</artifactId>
+		<version>3.0.1-SNAPSHOT</version>
 		<relativePath>./pom.xml</relativePath>
 	</parent>
-	<artifactId>kryo-shaded</artifactId>
+	<artifactId>kryo-slf4j-shaded</artifactId>
 	<packaging>bundle</packaging>
-	<name>Kryo Shaded</name>
-	<description>Fast, efficient Java serialization. This contains the shaded reflectasm jar to prevent conflicts with other versions of asm.</description>
+	<name>Kryo-slf4j Shaded</name>
+	<description>Fork of Esoteric Software's Kryo built by Nathan Sweet that replaces Minolg with slf4j as the logging facade. This contains the shaded reflectasm jar to prevent conflicts with other versions of asm.</description>
 
 	<dependencies>
 		<dependency>
