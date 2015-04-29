@@ -4,21 +4,20 @@
 	<formats>
 		<format>zip</format>
 	</formats>
+	<dependencySets>
+		<!-- Include the project binary and its dependencies in the lib directory 
+		     of the deployment. Transitive dependencies being included. -->
+		<dependencySet>
+			<outputDirectory>lib</outputDirectory>
+		</dependencySet>
+	</dependencySets>
 	<fileSets>
 		<fileSet>
 			<includes>
 				<include>README*</include>
 				<include>license*</include>
 				<include>CHANGES*</include>
-				<include>lib/</include>
 				<include>src/</include>
-			</includes>
-		</fileSet>
-		<fileSet>
-			<directory>target</directory>
-			<outputDirectory></outputDirectory>
-			<includes>
-				<include>*.jar</include>
 			</includes>
 		</fileSet>
 	</fileSets>
