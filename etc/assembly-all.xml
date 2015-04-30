@@ -14,11 +14,17 @@
 	<fileSets>
 		<fileSet>
 			<includes>
+				<include>src/</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>../</directory>
+			<includes>
 				<include>README*</include>
 				<include>license*</include>
 				<include>CHANGES*</include>
-				<include>src/</include>
 			</includes>
+			<outputDirectory>/</outputDirectory>
 		</fileSet>
 	</fileSets>
 </assembly>

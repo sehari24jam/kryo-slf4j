@@ -4,7 +4,7 @@
 		<groupId>net.lizalab</groupId>
 		<artifactId>kryo-slf4j-parent</artifactId>
 		<version>3.0.1-SNAPSHOT</version>
-		<relativePath>./pom.xml</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>kryo-slf4j-shaded</artifactId>
 	<packaging>bundle</packaging>

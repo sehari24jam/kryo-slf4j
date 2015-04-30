@@ -40,8 +40,8 @@
 	</properties>
 	
 	<modules>
-		<module>pom-main.xml</module>
-		<module>pom-shaded.xml</module>
+		<module>kryo-slf4j</module>
+		<module>kryo-slf4j/pom-shaded.xml</module>
 	</modules>
 	
 	<dependencyManagement>
