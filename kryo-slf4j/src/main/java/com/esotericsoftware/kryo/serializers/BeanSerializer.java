@@ -29,14 +29,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.KryoException;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.reflectasm.MethodAccess;
-
-import static com.esotericsoftware.minlog.Log.*;
 
 /** Serializes Java beans using bean accessor methods. Only bean properties with both a getter and setter are serialized. This
  * class is not as fast as {@link FieldSerializer} but is much faster and more efficient than Java serialization. Bytecode
@@ -48,6 +49,8 @@ import static com.esotericsoftware.minlog.Log.*;
  * @see Kryo#register(Class, Serializer)
  * @author Nathan Sweet <misc@n4te.com> */
 public class BeanSerializer<T> extends Serializer<T> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(BeanSerializer.class);
+	
 	static final Object[] noArgs = {};
 	private CachedProperty[] properties;
 	Object access;
@@ -106,11 +109,13 @@ public class BeanSerializer<T> extends Serializer<T> {
 	}
 
 	public void write (Kryo kryo, Output output, T object) {
+		final String methodName = "write : ";
+		
 		Class type = object.getClass();
 		for (int i = 0, n = properties.length; i < n; i++) {
 			CachedProperty property = properties[i];
 			try {
-				if (TRACE) trace("kryo", "Write property: " + property + " (" + type.getName() + ")");
+				LOGGER.trace("{} Write property: {} ({})", methodName, property, type.getName());
 				Object value = property.get(object);
 				Serializer serializer = property.serializer;
 				if (serializer != null)
@@ -133,12 +138,14 @@ public class BeanSerializer<T> extends Serializer<T> {
 	}
 
 	public T read (Kryo kryo, Input input, Class<T> type) {
+		final String methodName = "write : ";
+		
 		T object = kryo.newInstance(type);
 		kryo.reference(object);
 		for (int i = 0, n = properties.length; i < n; i++) {
 			CachedProperty property = properties[i];
 			try {
-				if (TRACE) trace("kryo", "Read property: " + property + " (" + object.getClass() + ")");
+				LOGGER.trace("{} Read property: {} ({})", methodName, property, object.getClass());
 				Object value;
 				Serializer serializer = property.serializer;
 				if (serializer != null)

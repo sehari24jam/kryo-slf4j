@@ -22,14 +22,17 @@ package com.esotericsoftware.kryo.io;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import com.esotericsoftware.kryo.KryoException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static com.esotericsoftware.minlog.Log.*;
+import com.esotericsoftware.kryo.KryoException;
 
 /** An OutputStream that buffers data in a byte array and flushes to another OutputStream, writing the length before each flush.
  * The length allows the chunks to be skipped when reading.
  * @author Nathan Sweet <misc@n4te.com> */
 public class OutputChunked extends Output {
+	private static final Logger LOGGER = LoggerFactory.getLogger(OutputChunked.class);
+	
 	/** Creates an uninitialized OutputChunked with a maximum chunk size of 2048. The OutputStream must be set before it can be
 	 * used. */
 	public OutputChunked () {
@@ -65,7 +68,7 @@ public class OutputChunked extends Output {
 
 	private void writeChunkSize () throws IOException {
 		int size = position();
-		if (TRACE) trace("kryo", "Write chunk: " + size);
+		LOGGER.trace("writeChunkSize : Write chunk: {}", size);
 		OutputStream outputStream = getOutputStream();
 		if ((size & ~0x7F) == 0) {
 			outputStream.write(size);
@@ -98,7 +101,7 @@ public class OutputChunked extends Output {
 	 * reading. */
 	public void endChunks () {
 		flush(); // Flush any partial chunk.
-		if (TRACE) trace("kryo", "End chunks.");
+		LOGGER.trace("endChunks : End chunks.");
 		try {
 			getOutputStream().write(0); // Zero length chunk.
 		} catch (IOException ex) {

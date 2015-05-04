@@ -20,7 +20,6 @@
 package com.esotericsoftware.kryo.util;
 
 import static com.esotericsoftware.kryo.util.UnsafeUtil.unsafe;
-import static com.esotericsoftware.minlog.Log.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -28,6 +27,9 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sun.misc.Cleaner;
 import sun.misc.Unsafe;
@@ -44,6 +46,8 @@ import sun.nio.ch.DirectBuffer;
  */
 
 public class UnsafeUtil {
+	private static final Logger LOGGER = LoggerFactory.getLogger(UnsafeUtil.class);
+	
 	final static private Unsafe _unsafe;
 	final static public long byteArrayBaseOffset;
 	final static public long floatArrayBaseOffset;
@@ -80,11 +84,10 @@ public class UnsafeUtil {
 				tmpLongArrayBaseOffset = tmpUnsafe.arrayBaseOffset(long[].class);
 				tmpDoubleArrayBaseOffset = tmpUnsafe.arrayBaseOffset(double[].class);
 			} else {
-				if (TRACE) trace("kryo", "Running on Android platform. Use of sun.misc.Unsafe should be disabled");
+				LOGGER.trace("static : Running on Android platform. Use of sun.misc.Unsafe should be disabled");
 			}
 		} catch (java.lang.Exception e) {
-			if (TRACE)
-				trace("kryo", "sun.misc.Unsafe is not accessible or not available. Use of sun.misc.Unsafe should be disabled");
+			LOGGER.trace("static : sun.misc.Unsafe is not accessible or not available. Use of sun.misc.Unsafe should be disabled");	
 		}
 
 		byteArrayBaseOffset = tmpByteArrayBaseOffset;
@@ -139,7 +142,7 @@ public class UnsafeUtil {
 		Arrays.sort(allFieldsArray, fieldOffsetComparator);
 
 		for (Field f : allFields) {
-			if (TRACE) trace("kryo", "Field '" + f.getName() + "' at offset " + unsafe().objectFieldOffset(f));
+			LOGGER.trace("sortFieldsByOffset : Field '{}' at offset {}", f.getName(), unsafe().objectFieldOffset(f));
 		}
 		
 		return allFieldsArray;

@@ -41,7 +41,6 @@ import com.esotericsoftware.kryo.io.UnsafeInput;
 import com.esotericsoftware.kryo.io.UnsafeOutput;
 import com.esotericsoftware.kryo.io.UnsafeMemoryInput;
 import com.esotericsoftware.kryo.io.UnsafeMemoryOutput;
-import com.esotericsoftware.minlog.Log;
 
 /**
  * Convenience methods for round tripping objects.

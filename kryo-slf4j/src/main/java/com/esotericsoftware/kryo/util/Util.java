@@ -19,11 +19,14 @@
 
 package com.esotericsoftware.kryo.util;
 
-import static com.esotericsoftware.minlog.Log.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** A few utility methods, mostly for private use.
  * @author Nathan Sweet <misc@n4te.com> */
 public class Util {
+	private static final Logger LOGGER = LoggerFactory.getLogger(Util.class);
+	
 	static public boolean isAndroid;
 	static {
 		try {
@@ -84,21 +87,6 @@ public class Util {
 			|| type == Character.class || type == Short.class || type == Double.class;
 	}
 
-	/** Logs a message about an object. The log level and the string format of the object depend on the object type. */
-	static public void log (String message, Object object) {
-		if (object == null) {
-			if (TRACE) trace("kryo", message + ": null");
-			return;
-		}
-		Class type = object.getClass();
-		if (type.isPrimitive() || type == Boolean.class || type == Byte.class || type == Character.class || type == Short.class
-			|| type == Integer.class || type == Long.class || type == Float.class || type == Double.class || type == String.class) {
-			if (TRACE) trace("kryo", message + ": " + string(object));
-		} else {
-			debug("kryo", message + ": " + string(object));
-		}
-	}
-
 	/** Returns the object formatted as a string. The format depends on the object's type and whether {@link Object#toString()} has
 	 * been overridden. */
 	static public String string (Object object) {
@@ -107,13 +95,13 @@ public class Util {
 		if (type.isArray()) return className(type);
 		try {
 			if (type.getMethod("toString", new Class[0]).getDeclaringClass() == Object.class)
-				return TRACE ? className(type) : type.getSimpleName();
+				return LOGGER.isTraceEnabled() ? className(type) : type.getSimpleName();
 		} catch (Exception ignored) {
 		}
                 try {
 		    return String.valueOf(object);
                 } catch(Throwable e) {
-                    return (TRACE ? className(type) : type.getSimpleName()) + "(Exception " + e + " in toString)";
+                    return (LOGGER.isTraceEnabled() ? className(type) : type.getSimpleName()) + "(Exception " + e + " in toString)";
                 }
 	}
 

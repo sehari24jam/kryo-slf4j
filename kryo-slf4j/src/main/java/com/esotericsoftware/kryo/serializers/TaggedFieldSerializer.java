@@ -19,8 +19,6 @@
 
 package com.esotericsoftware.kryo.serializers;
 
-import static com.esotericsoftware.minlog.Log.*;
-
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.KryoException;
 import com.esotericsoftware.kryo.io.Input;
@@ -32,6 +30,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /** Serializes objects using direct field assignment for fields that have been {@link Tag tagged}. Fields without the {@link Tag}
  * annotation are not serialized. New tagged fields can be added without invalidating previously serialized bytes. If any tagged
  * field is removed, previously serialized bytes are invalidated. Instead of removing fields, apply the {@link Deprecated}
@@ -39,6 +40,8 @@ import java.lang.reflect.Field;
  * instead of reflection.
  * @author Nathan Sweet <misc@n4te.com> */
 public class TaggedFieldSerializer<T> extends FieldSerializer<T> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(TaggedFieldSerializer.class);
+	
 	private int[] tags;
 	private int writeFieldCount;
 	private boolean[] deprecated;
@@ -53,7 +56,7 @@ public class TaggedFieldSerializer<T> extends FieldSerializer<T> {
 		for (int i = 0, n = fields.length; i < n; i++) {
 			Field field = fields[i].getField();
 			if (field.getAnnotation(Tag.class) == null) {
-				if (TRACE) trace("kryo", "Ignoring field without tag: " + fields[i]);
+				LOGGER.trace("initializeCachedFields : Ignoring field without tag: {}", fields[i]);
 				super.removeField(fields[i]);
 			}
 		}

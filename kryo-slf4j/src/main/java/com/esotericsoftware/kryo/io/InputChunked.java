@@ -22,13 +22,16 @@ package com.esotericsoftware.kryo.io;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.esotericsoftware.kryo.KryoException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static com.esotericsoftware.minlog.Log.*;
+import com.esotericsoftware.kryo.KryoException;
 
 /** An InputStream that reads lengths and chunks of data from another OutputStream, allowing chunks to be skipped.
  * @author Nathan Sweet <misc@n4te.com> */
 public class InputChunked extends Input {
+	private static final Logger LOGGER = LoggerFactory.getLogger(InputChunked.class);
+	
 	private int chunkSize = -1;
 
 	/** Creates an uninitialized InputChunked with a buffer size of 2048. The InputStream must be set before it can be used. */
@@ -85,7 +88,7 @@ public class InputChunked extends Input {
 				result |= (b & 0x7F) << offset;
 				if ((b & 0x80) == 0) {
 					chunkSize = result;
-					if (TRACE) trace("kryo", "Read chunk: " + chunkSize);
+					LOGGER.trace("readChunkSize : Read chunk: {}", chunkSize);
 					return;
 				}
 			}
@@ -102,6 +105,6 @@ public class InputChunked extends Input {
 		while (chunkSize > 0)
 			skip(chunkSize);
 		chunkSize = -1;
-		if (TRACE) trace("kryo", "Next chunks.");
+		LOGGER.trace("nextChunks : Next chunks.");
 	}
 }

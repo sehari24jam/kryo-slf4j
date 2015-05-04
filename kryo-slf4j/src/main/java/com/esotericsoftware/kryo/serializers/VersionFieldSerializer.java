@@ -19,13 +19,14 @@
 
 package com.esotericsoftware.kryo.serializers;
 
-import static com.esotericsoftware.minlog.Log.*;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.KryoException;
@@ -40,6 +41,8 @@ import com.esotericsoftware.kryo.io.Output;
  * deserializing, the input version will be examined to decide what fields are not in the input.
  * @author Tianyi HE <hty0807@gmail.com> */
 public class VersionFieldSerializer<T> extends FieldSerializer<T> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(VersionFieldSerializer.class);
+	
 	private int typeVersion = 0; // Version of current type.
 	private int[] fieldVersion; // Version of each field.
 	private boolean compatible = true; // Whether current type is compatible with serialized objects with different version.
@@ -71,7 +74,7 @@ public class VersionFieldSerializer<T> extends FieldSerializer<T> {
 			}
 		}
 		this.removedFields.clear();
-		if (DEBUG) debug("Version for type " + getType().getName() + " is " + typeVersion);
+		LOGGER.debug("initializeCachedFields : Version for type {} is {}", getType().getName(), typeVersion);
 	}
 
 	@Override
@@ -112,7 +115,7 @@ public class VersionFieldSerializer<T> extends FieldSerializer<T> {
 		for (int i = 0, n = fields.length; i < n; i++) {
 			// Field is not present in input, skip it.
 			if (fieldVersion[i] > version) {
-				if (DEBUG) debug("Skip field " + fields[i].getField().getName());
+				LOGGER.debug("read : Skip field {}", fields[i].getField().getName());
 				continue;
 			}
 			fields[i].read(input, object);

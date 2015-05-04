@@ -19,14 +19,15 @@
 
 package com.esotericsoftware.kryo.serializers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.InputChunked;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.io.OutputChunked;
 import com.esotericsoftware.kryo.util.ObjectMap;
-
-import static com.esotericsoftware.minlog.Log.*;
 
 /** Serializes objects using direct field assignment, with limited support for forward and backward compatibility. Fields can be
  * added or removed without invalidating previously serialized bytes. Note that changing the type of a field is not supported.
@@ -43,16 +44,20 @@ import static com.esotericsoftware.minlog.Log.*;
  * must be avoided.
  * @author Nathan Sweet <misc@n4te.com> */
 public class CompatibleFieldSerializer<T> extends FieldSerializer<T> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(CompatibleFieldSerializer.class);
+	
 	public CompatibleFieldSerializer (Kryo kryo, Class type) {
 		super(kryo, type);
 	}
 
 	public void write (Kryo kryo, Output output, T object) {
+		final String methodName = "write : ";
+		
 		CachedField[] fields = getFields();
 		ObjectMap context = kryo.getGraphContext();
 		if (!context.containsKey(this)) {
 			context.put(this, null);
-			if (TRACE) trace("kryo", "Write " + fields.length + " field names.");
+			LOGGER.trace("{} Write {} field names.", methodName, fields.length);
 			output.writeVarInt(fields.length, true);
 			for (int i = 0, n = fields.length; i < n; i++)
 				output.writeString(fields[i].field.getName());
@@ -66,13 +71,15 @@ public class CompatibleFieldSerializer<T> extends FieldSerializer<T> {
 	}
 
 	public T read (Kryo kryo, Input input, Class<T> type) {
+		final String methodName = "read : ";
+		
 		T object = create(kryo, input, type);
 		kryo.reference(object);
 		ObjectMap context = kryo.getGraphContext();
 		CachedField[] fields = (CachedField[])context.get(this);
 		if (fields == null) {
 			int length = input.readVarInt(true);
-			if (TRACE) trace("kryo", "Read " + length + " field names.");
+			LOGGER.trace("{} Read {} field names.", methodName, length);
 			String[] names = new String[length];
 			for (int i = 0; i < length; i++)
 				names[i] = input.readString();
@@ -88,7 +95,7 @@ public class CompatibleFieldSerializer<T> extends FieldSerializer<T> {
 						continue outer;
 					}
 				}
-				if (TRACE) trace("kryo", "Ignore obsolete field: " + schemaName);
+				LOGGER.trace("{} Ignore obsolete field: {}", methodName, schemaName);
 			}
 			context.put(this, fields);
 		}
@@ -104,7 +111,7 @@ public class CompatibleFieldSerializer<T> extends FieldSerializer<T> {
 				cachedField = getField(cachedField.field.getName());
 			}
 			if (cachedField == null) {
-				if (TRACE) trace("kryo", "Skip obsolete field.");
+				LOGGER.trace("{} Skip obsolete field.");
 				inputChunked.nextChunks();
 				continue;
 			}

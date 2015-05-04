@@ -20,11 +20,12 @@
 package com.esotericsoftware.kryo.serializers;
 
 import static com.esotericsoftware.kryo.util.UnsafeUtil.unsafe;
-import static com.esotericsoftware.minlog.Log.TRACE;
-import static com.esotericsoftware.minlog.Log.trace;
 
 import java.lang.reflect.Field;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.esotericsoftware.kryo.serializers.FieldSerializer.CachedField;
 import com.esotericsoftware.kryo.serializers.UnsafeCacheFields.UnsafeRegionField;
@@ -34,6 +35,8 @@ import com.esotericsoftware.reflectasm.FieldAccess;
 /* Helper class for implementing FieldSerializer using Unsafe-based approach. 
  * @author Roman Levenstein <romixlev@gmail.com> */
 final class FieldSerializerUnsafeUtilImpl implements FieldSerializerUnsafeUtil {
+	private static final Logger LOGGER = LoggerFactory.getLogger(FieldSerializerUnsafeUtilImpl.class);
+	
 	private FieldSerializer serializer;
 
 	public FieldSerializerUnsafeUtilImpl (FieldSerializer serializer) {
@@ -42,6 +45,8 @@ final class FieldSerializerUnsafeUtilImpl implements FieldSerializerUnsafeUtil {
 
 	public void createUnsafeCacheFieldsAndRegions (List<Field> validFields, List<CachedField> cachedFields, int baseIndex,
 		IntArray useAsm) {
+		final String methodName = "createUnsafeCacheFieldsAndRegions : ";
+		
 		// Find adjacent fields of primitive types
 		long startPrimitives = 0;
 		long endPrimitives = 0;
@@ -69,11 +74,8 @@ final class FieldSerializerUnsafeUtilImpl implements FieldSerializerUnsafeUtil {
 				endPrimitives = lastFieldEndOffset;
 				lastWasPrimitive = false;
 				if (primitiveLength > 1) {
-					if (TRACE)
-						trace("kryo", "Class " + serializer.getType().getName()
-							+ ". Found a set of consecutive primitive fields. Number of fields = " + primitiveLength
-							+ ". Byte length = " + (endPrimitives - startPrimitives) + " Start offset = " + startPrimitives
-							+ " endOffset=" + endPrimitives);
+					LOGGER.trace("{} Class {}. Found a set of consecutive primitive fields. Number of fields = {}. Byte length = {}  Start offset = {} endOffset={}", methodName, serializer.getType().getName(),
+							primitiveLength, (endPrimitives - startPrimitives), startPrimitives, endPrimitives);
 					// TODO: register a region instead of a field
 					CachedField cf = new UnsafeRegionField(startPrimitives, (endPrimitives - startPrimitives));
 					cf.field = lastField;
@@ -103,11 +105,8 @@ final class FieldSerializerUnsafeUtilImpl implements FieldSerializerUnsafeUtil {
 		if (!serializer.getUseAsmEnabled() && serializer.getUseMemRegions() && lastWasPrimitive) {
 			endPrimitives = lastFieldEndOffset;
 			if (primitiveLength > 1) {
-				if (TRACE) {
-					trace("kryo", "Class " + serializer.getType().getName()
-						+ ". Found a set of consecutive primitive fields. Number of fields = " + primitiveLength + ". Byte length = "
-						+ (endPrimitives - startPrimitives) + " Start offset = " + startPrimitives + " endOffset=" + endPrimitives);
-				}
+				LOGGER.trace("{} Class {}. Found a set of consecutive primitive fields. Number of fields = {}. Byte length = {} Start offset = {} endOffset={}", methodName, serializer.getType().getName(),
+						primitiveLength, (endPrimitives - startPrimitives), startPrimitives, endPrimitives);
 				// register a region instead of a field
 				CachedField cf = new UnsafeRegionField(startPrimitives, (endPrimitives - startPrimitives));
 				cf.field = lastField;

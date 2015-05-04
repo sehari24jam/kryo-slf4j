@@ -10,6 +10,11 @@
 		<dependencySet>
 			<outputDirectory>lib</outputDirectory>
 		</dependencySet>
+		<!-- Include provided scope dependencies for logging facade as well in 'all' archive. -->
+		<dependencySet>
+			<outputDirectory>lib</outputDirectory>
+			<scope>provided</scope>
+		</dependencySet>
 	</dependencySets>
 	<fileSets>
 		<fileSet>

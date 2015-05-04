@@ -33,6 +33,12 @@ import java.util.concurrent.TimeUnit;
 //import org.gridgain.grid.marshaller.GridMarshaller;
 //import org.gridgain.grid.marshaller.optimized.GridOptimizedMarshaller;
 
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+
 import com.esotericsoftware.kryo.io.FastInput;
 import com.esotericsoftware.kryo.io.FastOutput;
 import com.esotericsoftware.kryo.io.Input;
@@ -40,7 +46,6 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.io.UnsafeInput;
 import com.esotericsoftware.kryo.io.UnsafeOutput;
 import com.esotericsoftware.kryo.serializers.FieldSerializer;
-import com.esotericsoftware.minlog.Log;
 
 /*** This test was originally taken from a GridGain blog. It is a compares the speed of serialization using Java serialization,
  * Kryo, Kryo with Unsafe patches and GridGain's serialization.
@@ -721,7 +726,10 @@ public class SerializationBenchmarkTest extends KryoTestCase {
 
 	protected void setUp () throws Exception {
 		super.setUp();
-		Log.WARN();
+		LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+		Configuration conf = ctx.getConfiguration();
+		conf.getLoggerConfig(LogManager.ROOT_LOGGER_NAME).setLevel(Level.WARN);
+		ctx.updateLoggers(conf);
 	}
 
 	private static class SampleObject implements Externalizable, KryoSerializable {

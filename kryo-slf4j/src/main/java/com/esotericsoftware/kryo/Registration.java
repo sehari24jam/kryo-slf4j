@@ -19,14 +19,17 @@
 
 package com.esotericsoftware.kryo;
 
-import org.objenesis.instantiator.ObjectInstantiator;
+import static com.esotericsoftware.kryo.util.Util.className;
 
-import static com.esotericsoftware.kryo.util.Util.*;
-import static com.esotericsoftware.minlog.Log.*;
+import org.objenesis.instantiator.ObjectInstantiator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Describes the {@link Serializer} and class ID to use for a class.
  * @author Nathan Sweet <misc@n4te.com> */
 public class Registration {
+	private static final Logger LOGGER = LoggerFactory.getLogger(Registration.class);
+	
 	private final Class type;
 	private final int id;
 	private Serializer serializer;
@@ -57,7 +60,7 @@ public class Registration {
 	public void setSerializer (Serializer serializer) {
 		if (serializer == null) throw new IllegalArgumentException("serializer cannot be null.");
 		this.serializer = serializer;
-		if (TRACE) trace("kryo", "Update registered serializer: " + type.getName() + " (" + serializer.getClass().getName() + ")");
+		LOGGER.trace("setSerializer : Update registered serializer: {} ({})", type.getName(), serializer.getClass().getName());
 	}
 
 	/** @return May be null if not yet set. */
