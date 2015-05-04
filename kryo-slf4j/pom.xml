@@ -8,7 +8,7 @@
 	<artifactId>kryo-slf4j</artifactId>
 	<packaging>bundle</packaging>
 	<name>Kryo-slf4j</name>
-	<description>Fork of Esoteric Software's Kryo built by Nathan Sweet that replaces Minolg with slf4j as the logging facade. This is the "main" kryo-slf4j artifact, with a regular dependency on reflectasm.</description>
+	<description>Fork of Esoteric Software's Kryo built by Nathan Sweet that replaces Minlog with slf4j as the logging facade. This is the "main" kryo-slf4j artifact, with a regular dependency on reflectasm.</description>
 
 	<dependencies>
 		<dependency>

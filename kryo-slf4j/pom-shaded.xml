@@ -9,7 +9,7 @@
 	<artifactId>kryo-slf4j-shaded</artifactId>
 	<packaging>bundle</packaging>
 	<name>Kryo-slf4j Shaded</name>
-	<description>Fork of Esoteric Software's Kryo built by Nathan Sweet that replaces Minolg with slf4j as the logging facade. This contains the shaded reflectasm jar to prevent conflicts with other versions of asm.</description>
+	<description>Fork of Esoteric Software's Kryo built by Nathan Sweet that replaces Minlog with slf4j as the logging facade. This contains the shaded reflectasm jar to prevent conflicts with other versions of asm.</description>
 
 	<dependencies>
 		<dependency>

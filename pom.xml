@@ -10,7 +10,7 @@
 	<version>3.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Kryo-slf4j Parent</name>
-	<description>Fork of Esoteric Software's Kryo built by Nathan Sweet that replaces Minolg with slf4j as the logging facade. This is the parent pom that assembles the main kryo-slf4j and shaded kryo-slf4j artifacts.</description>
+	<description>Fork of Esoteric Software's Kryo built by Nathan Sweet that replaces Minlog with slf4j as the logging facade. This is the parent pom that assembles the main kryo-slf4j and shaded kryo-slf4j artifacts.</description>
 	<url>https://github.com/hpadmanabhan/kryo-slf4j</url>
 
 	<licenses>
@@ -43,6 +43,17 @@
 		<module>kryo-slf4j</module>
 		<module>kryo-slf4j/pom-shaded.xml</module>
 	</modules>
+	
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
 	
 	<dependencyManagement>
 		<dependencies>
@@ -113,6 +124,47 @@
 						<encoding>utf-8</encoding>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>2.4</version>
+					<executions>
+						<execution>
+							<id>attach-sources</id>
+							<goals>
+								<goal>jar-no-fork</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.8.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.5.1</version>
+				</plugin>
+				<!-- For signing project artifacts for deployment to Central. -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>1.6</version>
+					<executions>
+						<execution>
+							<id>sign-artifacts</id>
+							<phase>verify</phase>
+							<goals>
+								<goal>sign</goal>
+							</goals>
+							<configuration>
+								<passphraseServerId>${gpg.keyname}</passphraseServerId>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -139,44 +191,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<profiles>
-		<profile>
-			<id>requireSnapshot</id>
-			<!-- This profile is activated by the "-P requireSnapshot" switch to
-				be able to deploy SNAPSHOTs only (which is not allowed for releases) -->
-			<build>
-				<plugins>
-					<!-- Jenkins should only build -SNAPSHOTs -->
-					<plugin>
-						<artifactId>maven-enforcer-plugin</artifactId>
-						<executions>
-							<execution>
-								<goals>
-									<goal>enforce</goal>
-								</goals>
-								<configuration>
-									<rules>
-										<evaluateBeanshell>
-											<condition>"${project.version}".endsWith("-SNAPSHOT")</condition>
-											<message>Jenkins should only build -SNAPSHOT versions</message>
-										</evaluateBeanshell>
-									</rules>
-									<fail>true</fail>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-
-	<repositories>
-		<repository>
-			<id>sonatype-releases</id>
-			<name>sonatype releases repo</name>
-			<url>https://oss.sonatype.org/content/repositories/releases</url>
-		</repository>
-	</repositories>
 </project>
