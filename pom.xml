@@ -5,13 +5,16 @@
 		<artifactId>oss-parent</artifactId>
 		<version>7</version>
 	</parent>
-	<groupId>net.lizalab</groupId>
+	<groupId>id.sehari24jam</groupId>
 	<artifactId>kryo-slf4j-parent</artifactId>
 	<version>3.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Kryo-slf4j Parent</name>
-	<description>Fork of Esoteric Software's Kryo built by Nathan Sweet that replaces Minlog with slf4j as the logging facade. This is the parent pom that assembles the main kryo-slf4j and shaded kryo-slf4j artifacts.</description>
-	<url>https://github.com/hpadmanabhan/kryo-slf4j</url>
+	<description>
+		Fork of Esoteric Software's Kryo built by Nathan Sweet that replaces Minlog with slf4j as the logging facade. This is the parent pom that assembles the main kryo-slf4j and shaded kryo-slf4j artifacts.
+		Fork from https://github.com/hpadmanabhan/kryo-slf4j
+	</description>
+	<url>https://github.com/sehari24jam/kryo-slf4j</url>
 
 	<licenses>
 		<license>
@@ -22,16 +25,16 @@
 	</licenses>
 
 	<scm>
-		<url>https://github.com/hpadmanabhan/kryo-slf4j</url>
-		<connection>scm:git:git@github.com:hpadmanabhan/kryo-slf4j.git</connection>
-		<developerConnection>scm:git:git@github.com:hpadmanabhan/kryo-slf4j.git</developerConnection>
+		<url>https://github.com/sehari24jam/kryo-slf4j</url>
+		<connection>scm:git:git@github.com:sehari24jam/kryo-slf4j.git</connection>
+		<developerConnection>scm:git:git@github.com:sehari24jam/kryo-slf4j.git</developerConnection>
 	  <tag>HEAD</tag>
   </scm>
 
 	<developers>
 		<developer>
-			<name>Hemant Padmanabhan</name>
-			<email>padmanabhanhemant at gmail dot com</email>
+			<name>Sehari24Jam</name>
+			<email>sehari24jam at gmail dot com</email>
 		</developer>
 	</developers>
 
